@@ -1,6 +1,6 @@
-import axios from 'axios'
-import '../axios'
-import React, { useContext, useEffect, useReducer } from 'react'
+import axios from "axios";
+import "../axios";
+import React, { useContext, useEffect, useReducer } from "react";
 import {
   SET_LOADING,
   REGISTER_USER_SUCCESS,
@@ -16,8 +16,10 @@ import {
   FETCH_SINGLE_JOB_ERROR,
   EDIT_JOB_SUCCESS,
   EDIT_JOB_ERROR,
-} from './actions'
-import reducer from './reducer'
+} from "./actions";
+import reducer from "./reducer";
+
+const URL = "http://localhost:5000/api/v1/";
 
 const initialState = {
   user: null,
@@ -27,121 +29,121 @@ const initialState = {
   editItem: null,
   singleJobError: false,
   editComplete: false,
-}
-const AppContext = React.createContext()
+};
+const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const setLoading = () => {
-    dispatch({ type: SET_LOADING })
-  }
+    dispatch({ type: SET_LOADING });
+  };
 
   // register
   const register = async (userInput) => {
-    setLoading()
+    setLoading();
     try {
-      const { data } = await axios.post(`/auth/register`, {
+      const { data } = await axios.post(`${URL}/auth/register`, {
         ...userInput,
-      })
+      });
 
-      dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user.name })
+      dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user.name });
       localStorage.setItem(
-        'user',
+        "user",
         JSON.stringify({ name: data.user.name, token: data.token })
-      )
+      );
     } catch (error) {
-      dispatch({ type: REGISTER_USER_ERROR })
+      dispatch({ type: REGISTER_USER_ERROR });
     }
-  }
+  };
 
   // login
   const login = async (userInput) => {
-    setLoading()
+    setLoading();
     try {
       const { data } = await axios.post(`/auth/login`, {
         ...userInput,
-      })
-      dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user.name })
+      });
+      dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user.name });
       localStorage.setItem(
-        'user',
+        "user",
         JSON.stringify({ name: data.user.name, token: data.token })
-      )
+      );
     } catch (error) {
-      dispatch({ type: REGISTER_USER_ERROR })
+      dispatch({ type: REGISTER_USER_ERROR });
     }
-  }
+  };
 
   // logout
   const logout = () => {
-    localStorage.removeItem('user')
-    dispatch({ type: LOGOUT_USER })
-  }
+    localStorage.removeItem("user");
+    dispatch({ type: LOGOUT_USER });
+  };
 
   // fetch jobs
   const fetchJobs = async () => {
-    setLoading()
+    setLoading();
     try {
-      const { data } = await axios.get(`/jobs`)
-      dispatch({ type: FETCH_JOBS_SUCCESS, payload: data.jobs })
+      const { data } = await axios.get(`/jobs`);
+      dispatch({ type: FETCH_JOBS_SUCCESS, payload: data.jobs });
     } catch (error) {
-      dispatch({ type: FETCH_JOBS_ERROR })
-      logout()
+      dispatch({ type: FETCH_JOBS_ERROR });
+      logout();
     }
-  }
+  };
 
   // create job
   const createJob = async (userInput) => {
-    setLoading()
+    setLoading();
     try {
       const { data } = await axios.post(`/jobs`, {
         ...userInput,
-      })
+      });
 
-      dispatch({ type: CREATE_JOB_SUCCESS, payload: data.job })
+      dispatch({ type: CREATE_JOB_SUCCESS, payload: data.job });
     } catch (error) {
-      dispatch({ type: CREATE_JOB_ERROR })
+      dispatch({ type: CREATE_JOB_ERROR });
     }
-  }
+  };
   const deleteJob = async (jobId) => {
-    setLoading()
+    setLoading();
     try {
-      await axios.delete(`/jobs/${jobId}`)
+      await axios.delete(`/jobs/${jobId}`);
 
-      fetchJobs()
+      fetchJobs();
     } catch (error) {
-      dispatch({ type: DELETE_JOB_ERROR })
+      dispatch({ type: DELETE_JOB_ERROR });
     }
-  }
+  };
 
   const fetchSingleJob = async (jobId) => {
-    setLoading()
+    setLoading();
     try {
-      const { data } = await axios.get(`/jobs/${jobId}`)
-      dispatch({ type: FETCH_SINGLE_JOB_SUCCESS, payload: data.job })
+      const { data } = await axios.get(`/jobs/${jobId}`);
+      dispatch({ type: FETCH_SINGLE_JOB_SUCCESS, payload: data.job });
     } catch (error) {
-      dispatch({ type: FETCH_SINGLE_JOB_ERROR })
+      dispatch({ type: FETCH_SINGLE_JOB_ERROR });
     }
-  }
+  };
   const editJob = async (jobId, userInput) => {
-    setLoading()
+    setLoading();
     try {
       const { data } = await axios.patch(`/jobs/${jobId}`, {
         ...userInput,
-      })
-      dispatch({ type: EDIT_JOB_SUCCESS, payload: data.job })
+      });
+      dispatch({ type: EDIT_JOB_SUCCESS, payload: data.job });
     } catch (error) {
-      dispatch({ type: EDIT_JOB_ERROR })
+      dispatch({ type: EDIT_JOB_ERROR });
     }
-  }
+  };
 
   useEffect(() => {
-    const user = localStorage.getItem('user')
+    const user = localStorage.getItem("user");
     if (user) {
-      const newUser = JSON.parse(user)
-      dispatch({ type: SET_USER, payload: newUser.name })
+      const newUser = JSON.parse(user);
+      dispatch({ type: SET_USER, payload: newUser.name });
     }
-  }, [])
+  }, []);
   return (
     <AppContext.Provider
       value={{
@@ -159,11 +161,11 @@ const AppProvider = ({ children }) => {
     >
       {children}
     </AppContext.Provider>
-  )
-}
+  );
+};
 // make sure use
 export const useGlobalContext = () => {
-  return useContext(AppContext)
-}
+  return useContext(AppContext);
+};
 
-export { AppProvider }
+export { AppProvider };

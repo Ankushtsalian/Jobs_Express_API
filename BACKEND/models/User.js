@@ -36,7 +36,7 @@ UserSchema.methods.createJWT = function () {
     { userId: this._id, name: this.name },
     process.env.JWT_SERCRET,
     {
-      expiresIn: "30d",
+      expiresIn: process.env.JWT_LIFETIME,
     }
   );
   return userToken;
