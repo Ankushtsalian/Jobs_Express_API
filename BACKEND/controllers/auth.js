@@ -4,14 +4,16 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   const user = await User.create({ ...req.body });
-  const token = jwt.sign(
+  const userToken = jwt.sign(
     { userId: user._id, name: user.name },
     process.env.JWT_SERCRET,
     {
       expiresIn: "30d",
     }
   );
-  res.status(StatusCodes.CREATED).json({ user, token });
+  res
+    .status(StatusCodes.CREATED)
+    .json({ user: { name: user.name }, token: userToken });
 };
 
 const login = async (req, res) => {
