@@ -19,7 +19,7 @@ import {
 } from "./actions";
 import reducer from "./reducer";
 
-const URL = "http://localhost:5000/api/v1/";
+const URL = "http://localhost:5000/api/v1";
 
 const initialState = {
   user: null,
@@ -46,7 +46,6 @@ const AppProvider = ({ children }) => {
       const { data } = await axios.post(`${URL}/auth/register`, {
         ...userInput,
       });
-
       dispatch({ type: REGISTER_USER_SUCCESS, payload: data.user.name });
       localStorage.setItem(
         "user",

@@ -2,7 +2,7 @@ require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
 const app = express();
-
+var cors = require("cors");
 //routers
 const authRouter = require("./routes/auth");
 const jobRouter = require("./routes/jobs");
@@ -11,7 +11,7 @@ const jobRouter = require("./routes/jobs");
 const notFoundMiddleware = require("./middleware/not-found");
 const errorHandlerMiddleware = require("./middleware/error-handler");
 const connectDB = require("./db/connect");
-
+app.use(cors());
 app.use(express.json());
 // extra packages
 
