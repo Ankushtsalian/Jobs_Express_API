@@ -7,19 +7,20 @@ const auth = (req, res, next) => {
 
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer "))
-    throw UnauthenticatedError("Authentication Invalid");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    throw new UnauthenticatedError("Authentication Invalid");
+  }
 
   const token = authHeader.split(" ")[1];
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, process.env.JWT_SERCRET);
 
     req.user = { userId: payload.userId, name: payload.name };
 
     next();
   } catch (error) {
-    throw new UnauthenticatedError("Authentication Invalid");
+    throw new UnauthenticatedError("Authentication Invalid1");
   }
 };
 module.exports = auth;

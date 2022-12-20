@@ -2,7 +2,9 @@ require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
 const app = express();
+
 var cors = require("cors");
+const authenticateUser = require("./middleware/authentication");
 //routers
 const authRouter = require("./routes/auth");
 const jobRouter = require("./routes/jobs");
@@ -21,7 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", jobRouter);
+app.use("/api/v1/jobs", authenticateUser, jobRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
