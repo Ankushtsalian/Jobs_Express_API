@@ -22,6 +22,11 @@ const JobSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "please provide user"],
     },
+    createdByName: {
+      type: String,
+      ref: "User",
+      required: [true, "please provide user"],
+    },
   },
   { timestamps: true }
 );

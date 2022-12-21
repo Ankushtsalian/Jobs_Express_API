@@ -1,6 +1,7 @@
 const Job = require("../models/Job");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors");
+const User = require("../models/User");
 
 const getAllJobs = async (req, res) => {
   const jobs = await Job.find({ createdBy: req.user.userId }).sort("createdAt");
@@ -13,6 +14,8 @@ const getJob = async (req, res) => {
 
 const createJob = async (req, res) => {
   req.body.createdBy = req.user.userId;
+  req.body.createdByName = req.user.name;
+
   const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json({ job });
 };
@@ -22,6 +25,9 @@ const updateJob = async (req, res) => {
 };
 
 const deleteJob = async (req, res) => {
+  // await Job.deleteMany({ status: "pending" });
+  // await User.deleteMany();
+
   res.send("reg user");
 };
 
