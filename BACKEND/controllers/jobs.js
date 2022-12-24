@@ -1,6 +1,10 @@
 const Job = require("../models/Job");
 const { StatusCodes } = require("http-status-codes");
-const { BadRequestError, NotFoundError } = require("../errors");
+const {
+  BadRequestError,
+  NotFoundError,
+  UnauthenticatedError,
+} = require("../errors");
 const User = require("../models/User");
 
 const getAllJobs = async (req, res) => {
@@ -56,11 +60,19 @@ const deleteJob = async (req, res) => {
     user: { userId },
   } = req;
 
-  const job = await Job.findByIdAndRemove({ _id: jobId, createdBy: userId });
+  const findJob = await Job.findById({ _id: jobId });
 
-  if (!job) throw new NotFoundError(`No job with id ${jobId}`);
+  // console.log("jobId:", jobId, "userId:", userId);
+  // console.log("job.createdBy :", job.createdBy);
 
-  res.status(StatusCodes.OK).send();
+  if (userId != String(findJob.createdBy))
+    throw new UnauthenticatedError(`Unauthorized user`);
+
+  if (!findJob) throw new NotFoundError(`No job with id ${jobId}`);
+
+  const job = await Job.findByIdAndRemove({ _id: jobId });
+
+  res.status(StatusCodes.OK).send(`Job with id ${jobId} removed`);
 };
 
 module.exports = {
