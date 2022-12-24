@@ -9,7 +9,16 @@ const getAllJobs = async (req, res) => {
 };
 
 const getJob = async (req, res) => {
-  res.send("reg user");
+  const {
+    params: { id: jobId },
+    user: { userId },
+  } = req;
+  //userId from auth middleware where we set req.user
+  const job = await Job.findOne({ _id: jobId, createdBy: userId });
+
+  if (!job) throw new NotFoundError(`No job with id ${jobId}`);
+
+  res.status(StatusCodes.OK).json({ job });
 };
 
 const createJob = async (req, res) => {
