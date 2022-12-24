@@ -25,8 +25,8 @@ const updateJob = async (req, res) => {
 };
 
 const deleteJob = async (req, res) => {
-  // await Job.deleteMany({ status: "pending" });
-  // await User.deleteMany();
+  await Job.deleteMany({ status: "pending" });
+  await User.deleteMany();
 
   res.send("reg user");
 };
