@@ -51,10 +51,16 @@ const updateJob = async (req, res) => {
 };
 
 const deleteJob = async (req, res) => {
-  await Job.deleteMany({ status: "pending" });
-  await User.deleteMany();
+  const {
+    params: { id: jobId },
+    user: { userId },
+  } = req;
 
-  res.send("reg user");
+  const job = await Job.findByIdAndRemove({ _id: jobId, createdBy: userId });
+
+  if (!job) throw new NotFoundError(`No job with id ${jobId}`);
+
+  res.status(StatusCodes.OK).send();
 };
 
 module.exports = {
